@@ -1,21 +1,27 @@
-import openai
+from openai import OpenAI
 import os
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-def get_electricity_prices(time):
-    prompt = f"What are the electricity prices at {time}?"
-    
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=prompt,
-        max_tokens=50
+def get_electricity_price(time, location="Poland"):
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {
+                "role": "system",
+                "content": "You are an assistant that provides electricity prices based on the time of day."
+            },
+            {
+                "role": "user",
+                "content": f"What is the electricity price at {time} in {location}?"
+            }
+        ]
     )
-    
-    return response.choices[0].text.strip()
+    return response.choices[0].message.content
 
 # Example usage
 if __name__ == "__main__":
-    time = "2024-06-01 14:00"
-    prices = get_electricity_prices(time)
-    print(f"Electricity prices at {time}: {prices}")
+    time = "14:00"
+    location = "Poland"
+    price = get_electricity_price(time, location)
+    print(f"The electricity price at {time} in {location} is: {price}")
