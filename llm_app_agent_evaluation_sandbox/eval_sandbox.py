@@ -22,7 +22,7 @@ def get_agent_response(prompt: str) -> str:
             {"role": "system", "content": "You are a logistics assistant. Respond concisely, providing the route and the total estimated travel time in minutes."},
             {"role": "user", "content": prompt}
         ],
-        temperature=0.7 # Higher temperature introduces non-determinism for testing purposes
+        temperature=1 # Higher temperature introduces non-determinism for testing purposes
     )
     return response.choices[0].message.content
 
